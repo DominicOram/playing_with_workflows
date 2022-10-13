@@ -5,8 +5,7 @@ on:
     types: [opened]
 
 jobs:
-  add-to-project:
-    name: Add issue to project
+  automate-project-columns:
     runs-on: ubuntu-latest
     steps:
       - uses: alex-page/github-project-automation-plus@v0.8.1
