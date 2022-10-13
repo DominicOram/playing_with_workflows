@@ -20,7 +20,6 @@ jobs:
                     edges {
                       node {
                         id
-                        title
                       }
                     }
                   }
@@ -28,11 +27,12 @@ jobs:
               }
             }' -f org=$ORGANIZATION -F repo=$REPO > project_data.json
 
-          echo 'ISSUE_TITLE='$(jq '.data.repository.pullRequest.closingIssuesReferences.edges[0].node.title ' project_data.json) >> $GITHUB_ENV
+          echo 'ISSUE_ID='$(jq '.data.repository.pullRequest.closingIssuesReferences.edges[0].node.id ' project_data.json) >> $GITHUB_ENV
   call-workflow:
+    needs: get_associated_issue
     if: github.event.pull_request.draft == false
     uses: ./.github/workflows/get_project_data.yml
     with:
       column_name: Review
-      issue_id: ${{ github.event.pull_request.node_id }}
+      issue_id: ${{ env.NEW_OPTION_ID }}
     secrets: inherit
