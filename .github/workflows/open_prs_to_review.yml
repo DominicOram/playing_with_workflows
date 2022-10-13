@@ -3,16 +3,30 @@ on:
   pull_request:
     types: [ready_for_review, opened]
 jobs:
-  check_draft:
-    runs-on: ubuntu-latest
-    steps:
+  get_associated_issue:
       - name: Get project data
         env:
           GITHUB_TOKEN: ${{ secrets.GHPROJECT_TOKEN }}
+          ORGANIZATION: DOramTesting
+          REPO: playing_with_workflows
         run: |
-          echo ${{github.event.pull_request.draft}}
-          echo ${{github.event.pull_request.draft == false}}
+          gh api graphql -f query='
+            query($org: String!, $repo: String!){
+              repository(owner: $org, name: $repo) {
+                pullRequest(number: ${{ github.event.pull_request.number }}) {
+                  closingIssuesReferences(first: 1) {
+                    edges {
+                      node {
+                        id
+                        title
+                      }
+                    }
+                  }
+                }
+              }
+            }' -f org=$ORGANIZATION -F repo=$REPO > project_data.json
 
+          echo 'ISSUE_TITLE='$(jq '.data.repository.pullRequest.closingIssuesReferences.edges[0].node.title ' project_data.json) >> $GITHUB_ENV
   call-workflow:
     if: github.event.pull_request.draft == false
     uses: ./.github/workflows/get_project_data.yml
