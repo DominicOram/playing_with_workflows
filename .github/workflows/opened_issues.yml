@@ -7,7 +7,7 @@ jobs:
   track_pr:
     runs-on: ubuntu-latest
     steps:
-      - uses: /.github/workflows/get_project_data.yml@main
+      - uses: ./.github/workflows/get_project_data.yml@main
         with:
           secrets: inherit
       - name: Add PR to project
