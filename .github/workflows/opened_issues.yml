@@ -1,0 +1,21 @@
+name: Adds all issues that don't include the 'bug' or 'needs-triage' labels to project board
+
+on:
+  issues:
+    types:
+      - opened
+
+jobs:
+  add-to-project:
+    name: Add issue to project
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/add-to-project@v0.3.0
+        with:
+          project-url: https://github.com/orgs/DOramTesting/projects/1
+          github-token: ${{ secrets.GHPROJECT_TOKEN }}
+      - uses: alex-page/github-project-automation-plus@v0.8.1
+        with:
+          project: Testing
+          column: To do
+          repo-token: ${{ secrets.GHPROJECT_TOKEN }}
