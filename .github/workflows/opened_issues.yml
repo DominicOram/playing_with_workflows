@@ -6,8 +6,7 @@ on:
 jobs:
   call-workflow:
     uses: ./.github/workflows/get_project_data.yml
-    with:
-      secrets: inherit
+    secrets: inherit
   track_pr:
     runs-on: ubuntu-latest
     steps:
