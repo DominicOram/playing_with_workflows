@@ -4,6 +4,8 @@ on:
     types: [ready_for_review, opened]
 jobs:
   get_associated_issue:
+    runs-on: ubuntu-latest
+    steps:
       - name: Get project data
         env:
           GITHUB_TOKEN: ${{ secrets.GHPROJECT_TOKEN }}
