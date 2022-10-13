@@ -1,0 +1,51 @@
+name: Reusable workflow example
+on:
+  workflow_call:
+    inputs:
+      org:
+        required: true
+        type: string
+      repo:
+        required: true
+        type: string
+      pr_id:
+        required: true
+        type: string     
+    secrets:
+      GHPROJECT_TOKEN:
+        required: true
+    outputs:
+      out_id:
+        description: "The first output string"
+        value: ${{ jobs.example_job.outputs.output1 }}
+
+jobs:
+  example_job:
+    name: Generate output
+    runs-on: ubuntu-latest
+    # Map the job outputs to step outputs
+    outputs:
+      output1: ${{ steps.step1.outputs.firstword }}
+    steps:
+      - id: step1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GHPROJECT_TOKEN }}
+          ORGANIZATION: ${{ inputs.org }}
+          REPO: ${{ inputs.repo }}
+        run: |
+          gh api graphql -f query='
+            query($org: String!, $repo: String!){
+              repository(owner: $org, name: $repo) {
+                pullRequest(number: ${{ inputs.pr_id }}) {
+                  closingIssuesReferences(first: 1) {
+                    edges {
+                      node {
+                        id
+                      }
+                    }
+                  }
+                }
+              }
+            }' -f org=$ORGANIZATION -F repo=$REPO > project_data.json
+
+          echo "::set-output name=firstword::'$(jq '.data.repository.pullRequest.closingIssuesReferences.edges[0].node.id ' project_data.json)""

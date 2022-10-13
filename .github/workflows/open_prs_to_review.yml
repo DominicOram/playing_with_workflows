@@ -4,35 +4,17 @@ on:
     types: [ready_for_review, opened]
 jobs:
   get_associated_issue:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Get project data
-        env:
-          GITHUB_TOKEN: ${{ secrets.GHPROJECT_TOKEN }}
-          ORGANIZATION: DOramTesting
-          REPO: playing_with_workflows
-        run: |
-          gh api graphql -f query='
-            query($org: String!, $repo: String!){
-              repository(owner: $org, name: $repo) {
-                pullRequest(number: ${{ github.event.pull_request.number }}) {
-                  closingIssuesReferences(first: 1) {
-                    edges {
-                      node {
-                        id
-                      }
-                    }
-                  }
-                }
-              }
-            }' -f org=$ORGANIZATION -F repo=$REPO > project_data.json
-
-          echo 'ISSUE_ID='$(jq '.data.repository.pullRequest.closingIssuesReferences.edges[0].node.id ' project_data.json) >> $GITHUB_ENV
+    uses: ./.github/workflows/get_issue_from_pr.yml
+    with:
+      org: DOramTesting
+      repo: playing_with_workflows
+      pr_id: ${{ github.event.pull_request.number }}
+    secrets: inherit
   call-workflow:
     needs: get_associated_issue
     if: github.event.pull_request.draft == false
     uses: ./.github/workflows/get_project_data.yml
     with:
       column_name: Review
-      issue_id: ${{ env.NEW_OPTION_ID }}
+      issue_id: ${{ needs.get_associated_issue.outputs.out_id }}
     secrets: inherit
