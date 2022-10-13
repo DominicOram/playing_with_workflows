@@ -2,8 +2,7 @@ name: Adds issues to backlog
 
 on:
   issues:
-    types:
-      - [opened]
+    types: [opened]
 
 jobs:
   add-to-project:

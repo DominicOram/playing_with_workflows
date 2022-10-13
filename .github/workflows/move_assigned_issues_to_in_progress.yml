@@ -2,8 +2,7 @@ name: Assigned issues to in progress
 
 on:
   issues:
-    types:
-      - assigned
+    types: [assigned]
   
 jobs:
   assigned-to-in-progress:
