@@ -2,7 +2,7 @@ name: Add PR to project
 on:
   pull_request:
     types:
-      - ready_for_review
+      - [ready_for_review, opened]
 jobs:
   call-workflow:
     uses: ./.github/workflows/get_project_data.yml
