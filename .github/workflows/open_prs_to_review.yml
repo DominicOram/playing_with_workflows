@@ -3,8 +3,17 @@ on:
   pull_request:
     types: [ready_for_review, opened]
 jobs:
+  check_draft:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get project data
+        env:
+          GITHUB_TOKEN: ${{ secrets.GHPROJECT_TOKEN }}
+        run: |
+          echo '{{github.event.pull_request.draft}}}
+
   call-workflow:
-    if: ${{ github.event.pull_request.draft == 'false'}}
+    if: github.event.pull_request.draft == 'false'
     uses: ./.github/workflows/get_project_data.yml
     with:
       column_name: Review
