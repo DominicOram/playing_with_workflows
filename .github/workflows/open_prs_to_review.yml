@@ -10,7 +10,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GHPROJECT_TOKEN }}
         run: |
-          echo {{github.event.pull_request.draft}}
+          echo ${{github.event.pull_request.draft}}
 
   call-workflow:
     if: github.event.pull_request.draft == 'false'
