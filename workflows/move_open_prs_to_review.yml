@@ -1,0 +1,17 @@
+name: Open PRs
+
+on:
+  pull_request:
+    types:
+      - opened
+  
+jobs:
+  PRs to review:
+    name: Move opened PRs to review
+    runs-on: ubuntu-latest
+    steps:
+      - uses: alex-page/github-project-automation-plus@v0.8.1
+        with:
+          project: Testing
+          column: Review
+          repo-token: ${{ secrets.GHPROJECT_TOKEN }}
