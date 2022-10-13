@@ -1,0 +1,3 @@
+{
+  "query": "query {resource(url: \"https://github.com/DOramTesting/playing_with_workflows/issues/4\") { ... on Issue { title repository { projectsV2(search:\"Testing\") { nodes { __schema}}} } }}"
+}
