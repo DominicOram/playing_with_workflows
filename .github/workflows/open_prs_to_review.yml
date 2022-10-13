@@ -4,6 +4,7 @@ on:
     types: [ready_for_review, opened]
 jobs:
   call-workflow:
+    if: ${{ github.event.pull_request.draft == 'false'}}
     uses: ./.github/workflows/get_project_data.yml
     with:
       column_name: Review
