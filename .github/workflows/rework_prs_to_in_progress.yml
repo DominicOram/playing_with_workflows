@@ -6,7 +6,7 @@ jobs:
   get_associated_issue:
     uses: ./.github/workflows/get_issue_from_pr.yml
     with:
-      org: ${{ github.event.org.id }}
+      org: ${{ github.repository_owner }}
       repo: ${{ github.event.repository.name }}
       pr_id: ${{ github.event.pull_request.number }}
     secrets: inherit
