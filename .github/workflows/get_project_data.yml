@@ -1,24 +1,28 @@
-name: Reusable workflow example
+name: Reusable workflow for moving issues on project boards
 on:
   workflow_call:
     inputs:
-      column_name:
+      column_name: # The column to move the issue to
         required: true
         type: string
-      issue_id:
+      issue_id: # The issue to move
         required: true
         type: string
     secrets:
       GHPROJECT_TOKEN:
         required: true
 jobs:
-  track_pr:
+  move_issue_to_project_column:
     runs-on: ubuntu-latest
     steps:
       - name: Get project data
+        # This will get information about the project in general and add it to the environment.
+        # * PROJECT_ID - The ID for the project itself
+        # * STATUS_FIELD_ID - The ID for the field that contains the column name
+        # * NEW_OPTION_ID - The ID for the column name we are moving into
         env:
           GITHUB_TOKEN: ${{ secrets.GHPROJECT_TOKEN }}
-          ORGANIZATION: DOramTesting
+          ORGANIZATION: ${{ github.repository_owner }}
           PROJECT_NUMBER: 1
         run: |
           gh api graphql -f query='
@@ -47,10 +51,10 @@ jobs:
             }' -f org=$ORGANIZATION -F number=$PROJECT_NUMBER > project_data.json
 
           echo 'PROJECT_ID='$(jq '.data.organization.projectV2.id' project_data.json) >> $GITHUB_ENV
-          echo 'DATE_FIELD_ID='$(jq '.data.organization.projectV2.fields.nodes[] | select(.name== "Date posted") | .id' project_data.json) >> $GITHUB_ENV
           echo 'STATUS_FIELD_ID='$(jq '.data.organization.projectV2.fields.nodes[] | select(.name== "Status") | .id' project_data.json) >> $GITHUB_ENV
           echo 'NEW_OPTION_ID='$(jq '.data.organization.projectV2.fields.nodes[] | select(.name== "Status") | .options[] | select(.name=="${{ inputs.column_name }}") |.id' project_data.json) >> $GITHUB_ENV
-      - name: Add PR to project
+      - name: Add issue to project
+        # If the issue has not been added to the project this will add it
         env:
           GITHUB_TOKEN: ${{ secrets.GHPROJECT_TOKEN }}
           ISSUE_ID: ${{ inputs.issue_id }}
@@ -66,10 +70,8 @@ jobs:
 
             echo 'ITEM_ID='$item_id >> $GITHUB_ENV
 
-      - name: Get date
-        run: echo "DATE=$(date +"%Y-%m-%d")" >> $GITHUB_ENV
-
-      - name: Set fields
+      - name: Set column
+        # Puts the issue in the new column
         env:
           GITHUB_TOKEN: ${{ secrets.GHPROJECT_TOKEN }}
         run: |

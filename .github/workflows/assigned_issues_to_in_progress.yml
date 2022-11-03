@@ -1,10 +1,10 @@
-name: Assigned
+name: Move issue to in progress when assigned
 on:
   issues:
     types:
       - assigned
 jobs:
-  call-workflow:
+  move_to_in_progress:
     uses: ./.github/workflows/get_project_data.yml
     with:
       column_name: In Progress
