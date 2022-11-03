@@ -1,7 +1,7 @@
 name: Add issues with open PRs to Review
 on:
   pull_request:
-    types: [ready_for_review, opened]
+    types: [ready_for_review, opened, review_requested]
 jobs:
   get_associated_issue:
     uses: ./.github/workflows/get_issue_from_pr.yml
