@@ -1,4 +1,4 @@
-name: Add PR to project
+name: Add issues with open PRs to Review
 on:
   pull_request:
     types: [ready_for_review, opened]
@@ -16,5 +16,5 @@ jobs:
     uses: ./.github/workflows/get_project_data.yml
     with:
       column_name: Review
-      issue_id: ${{ needs.get_associated_issue.outputs.out_id }}
+      issue_id: ${{ needs.get_associated_issue.outputs.issue_from_pr }}
     secrets: inherit

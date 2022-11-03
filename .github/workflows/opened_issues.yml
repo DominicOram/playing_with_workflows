@@ -1,4 +1,4 @@
-name: Add PR to project
+name: Add new issues to project
 on:
   issues:
     types:
@@ -7,6 +7,6 @@ jobs:
   call-workflow:
     uses: ./.github/workflows/get_project_data.yml
     with:
-      column_name: To do
+      column_name: Backlog
       issue_id: ${{ github.event.issue.node_id }}
     secrets: inherit

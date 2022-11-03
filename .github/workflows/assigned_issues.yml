@@ -1,4 +1,4 @@
-name: Assigned
+name: Move issue to in progress when assigned
 on:
   issues:
     types:
