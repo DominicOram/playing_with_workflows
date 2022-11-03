@@ -17,10 +17,10 @@ on:
     outputs:
       issue_from_pr:
         description: "The issue that the PR relates to"
-        value: ${{ jobs.example_job.outputs.job_issue_id }}
+        value: ${{ jobs.get_issue_from_pr.outputs.job_issue_id }}
 
 jobs:
-  example_job:
+  get_issue_from_pr:
     name: Get issue from PR
     runs-on: ubuntu-latest
     # Map the job outputs to step outputs

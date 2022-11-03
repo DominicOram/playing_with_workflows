@@ -4,7 +4,7 @@ on:
     types:
       - opened
 jobs:
-  call-workflow:
+  move_to_backlog:
     uses: ./.github/workflows/get_project_data.yml
     with:
       column_name: Backlog

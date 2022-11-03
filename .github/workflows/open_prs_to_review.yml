@@ -10,7 +10,7 @@ jobs:
       repo: playing_with_workflows
       pr_id: ${{ github.event.pull_request.number }}
     secrets: inherit
-  call-workflow:
+  move_to_review:
     needs: get_associated_issue
     if: github.event.pull_request.draft == false
     uses: ./.github/workflows/get_project_data.yml
